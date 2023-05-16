@@ -1,12 +1,35 @@
 import headerLogo from "../images/header-logo.svg";
 import { Link, useNavigate } from "react-router-dom";
 
-function Header({ userEmail, loggedIn }) {
+function Header({ btnState, userEmail, loggedIn, resetStates }) {
   const navigate = useNavigate();
 
   function signOut() {
     localStorage.removeItem("token");
     navigate("/signin", { replace: true });
+    resetStates();
+  }
+
+  function renderBtn() {
+    if (btnState) {
+      return (
+        <Link className="header__entry" to="/signin">
+          Войти
+        </Link>
+      );
+    } else if (loggedIn) {
+      return (
+        <button className="header__entry" onClick={signOut}>
+          Выйти
+        </button>
+      );
+    } else {
+      return (
+        <Link className="header__entry" to="/signup">
+          Регистрация
+        </Link>
+      );
+    }
   }
   return (
     <header className="header root__content">
@@ -18,15 +41,7 @@ function Header({ userEmail, loggedIn }) {
         />
       </button>
       {loggedIn && <p className="header__user-email">{userEmail}</p>}
-      {userEmail ? (
-        <button className="header__entry" onClick={signOut}>
-          Выйти
-        </button>
-      ) : (
-        <Link className="header__entry" to="/signup">
-          Регистрация
-        </Link>
-      )}
+      <>{renderBtn()}</>
     </header>
   );
 }

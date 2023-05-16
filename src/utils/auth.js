@@ -21,22 +21,6 @@ export function register(password, email) {
     },
     body: JSON.stringify({ password, email }),
   });
-
-  // return fetch(`${BASE_URL}/signup`, {
-  //   method: "POST",
-  //   headers: {
-  //     Accept: "application/json",
-  //     "Content-Type": "application/json",
-  //   },
-  //   body: JSON.stringify({ password, email }),
-  // })
-  //   .then((response) => {
-  //     return response.json();
-  //   })
-  //   .then((res) => {
-  //     return res;
-  //   })
-  //   .catch((err) => console.log(err));
 }
 
 export function login(password, email) {
@@ -48,22 +32,6 @@ export function login(password, email) {
     },
     body: JSON.stringify({ password, email }),
   });
-
-  // fetch(`${BASE_URL}/signin`, {
-  //   method: "POST",
-  //   headers: {
-  //     Accept: "application/json",
-  //     "Content-Type": "application/json",
-  //   },
-  //   body: JSON.stringify({ password, email }),
-  // })
-  //   .then((response) => {
-  //     return response.json();
-  //   })
-  //   .then((res) => {
-  //     return res;
-  //   })
-  //   .catch((err) => console.log(err));
 }
 
 export function getContent(token) {
@@ -75,20 +43,4 @@ export function getContent(token) {
       Authorization: `Bearer ${token}`,
     },
   });
-
-  // fetch(`${BASE_URL}/users/me`, {
-  //   method: "GET",
-  //   headers: {
-  //     Accept: "application/json",
-  //     "Content-Type": "application/json",
-  //     Authorization: `Bearer ${token}`,
-  //   },
-  // })
-  //   .then((response) => {
-  //     return response.json();
-  //   })
-  //   .then((res) => {
-  //     return res;
-  //   })
-  //   .catch((err) => console.log(err));
 }

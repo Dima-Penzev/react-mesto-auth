@@ -27,7 +27,8 @@ function App() {
   const [cardId, setCardId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [userData, setUserData] = useState({});
+  const [userEmail, setUserEmail] = useState("");
+  const [btnState, setBtnState] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,6 +40,9 @@ function App() {
       .catch((err) => {
         console.log(err);
       });
+  }, []);
+
+  useEffect(() => {
     checkToken();
   }, []);
 
@@ -51,7 +55,7 @@ function App() {
         .then((res) => {
           if (res) {
             setLoggedIn(true);
-            setUserData({ ...res.data });
+            setUserEmail(res.data.email);
             navigate("/main", { replace: true });
           }
         })
@@ -154,14 +158,30 @@ function App() {
       });
   }
 
-  const handleLogin = () => {
+  const handleLogin = (userEmail) => {
     setLoggedIn(true);
+    setUserEmail(userEmail);
+  };
+
+  const resetStates = () => {
+    setLoggedIn(false);
+    setUserEmail("");
+    setBtnState(false);
+  };
+
+  const toggleBtnState = () => {
+    setBtnState(true);
   };
 
   return (
     <div className="root">
       <CurrentUserContext.Provider value={currentUser}>
-        <Header userEmail={userData.email} loggedIn={loggedIn} />
+        <Header
+          btnState={btnState}
+          userEmail={userEmail}
+          loggedIn={loggedIn}
+          resetStates={resetStates}
+        />
         <Routes>
           <Route
             path="/"
@@ -173,7 +193,10 @@ function App() {
               )
             }
           />
-          <Route path="/signup" element={<Register />} />
+          <Route
+            path="/signup"
+            element={<Register toggleBtnState={toggleBtnState} />}
+          />
           <Route path="/signin" element={<Login handleLogin={handleLogin} />} />
           <Route
             path="/main"

@@ -24,7 +24,7 @@ export default function Login({ handleLogin }) {
     auth
       .login(formValue.password, formValue.email)
       .then((res) => {
-        handleLogin();
+        handleLogin(formValue.email);
         setFormValue({ email: "", password: "" });
         localStorage.setItem("token", res.token);
         navigate("/main", { replace: true });

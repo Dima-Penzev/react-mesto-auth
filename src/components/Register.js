@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import * as auth from "../utils/auth";
 
-export default function Register() {
+export default function Register({ toggleBtnState }) {
   const [formValue, setFormValue] = useState({
     email: "",
     password: "",
@@ -24,6 +24,7 @@ export default function Register() {
     auth
       .register(formValue.password, formValue.email)
       .then((res) => {
+        toggleBtnState();
         setFormValue({ email: "", password: "" });
         navigate("/signin", { replace: true });
       })
