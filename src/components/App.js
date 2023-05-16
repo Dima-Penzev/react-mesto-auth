@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import "../index.css";
 import Header from "./Header";
 import Main from "./Main";
@@ -14,6 +14,7 @@ import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import Register from "./Register";
 import Login from "./Login";
 import ProtectedRouteElement from "./ProtectedRoute";
+import * as auth from "../utils/auth";
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -26,6 +27,8 @@ function App() {
   const [cardId, setCardId] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [userData, setUserData] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     Promise.all([api.getUserInfo(), api.getInitialCards()])
@@ -36,7 +39,25 @@ function App() {
       .catch((err) => {
         console.log(err);
       });
+    checkToken();
   }, []);
+
+  function checkToken() {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      auth
+        .getContent(token)
+        .then((res) => {
+          if (res) {
+            setLoggedIn(true);
+            setUserData({ ...res.data });
+            navigate("/main", { replace: true });
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+  }
 
   function closeAllPopups() {
     setIsEditProfilePopupOpen(false);
@@ -140,7 +161,7 @@ function App() {
   return (
     <div className="root">
       <CurrentUserContext.Provider value={currentUser}>
-        <Header />
+        <Header userEmail={userData.email} loggedIn={loggedIn} />
         <Routes>
           <Route
             path="/"

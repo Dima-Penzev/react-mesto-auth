@@ -21,10 +21,13 @@ export default function Register() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    auth.register(formValue.password, formValue.email).then((res) => {
-      console.log(res);
-      navigate("/signin", { replace: true });
-    });
+    auth
+      .register(formValue.password, formValue.email)
+      .then((res) => {
+        setFormValue({ email: "", password: "" });
+        navigate("/signin", { replace: true });
+      })
+      .catch((err) => console.log(err));
   };
 
   return (

@@ -21,13 +21,15 @@ export default function Login({ handleLogin }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    auth.login(formValue.password, formValue.email).then((res) => {
-      console.log(res);
-      // setFormValue({ username: "", password: "" });
-      // localStorage.setItem("token", res.token);
-      handleLogin();
-      navigate("/main", { replace: true });
-    });
+    auth
+      .login(formValue.password, formValue.email)
+      .then((res) => {
+        handleLogin();
+        setFormValue({ email: "", password: "" });
+        localStorage.setItem("token", res.token);
+        navigate("/main", { replace: true });
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
