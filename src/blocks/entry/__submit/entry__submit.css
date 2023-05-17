@@ -1,0 +1,19 @@
+.entry__submit {
+  margin-top: 216px;
+  width: 100%;
+  min-height: 50px;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 22px;
+  text-align: center;
+  color: #000000;
+  cursor: pointer;
+}
+
+@media (max-width: 400px) {
+  .entry__submit {
+    margin-top: 173px;
+  }
+}

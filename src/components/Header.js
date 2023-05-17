@@ -1,7 +1,13 @@
 import headerLogo from "../images/header-logo.svg";
 import { Link, useNavigate } from "react-router-dom";
 
-function Header({ btnState, userEmail, loggedIn, resetStates }) {
+function Header({
+  btnState,
+  userEmail,
+  loggedIn,
+  resetStates,
+  toggleBtnState,
+}) {
   const navigate = useNavigate();
 
   function signOut() {
@@ -13,20 +19,20 @@ function Header({ btnState, userEmail, loggedIn, resetStates }) {
   function renderBtn() {
     if (btnState) {
       return (
-        <Link className="header__entry" to="/signin">
-          Войти
+        <Link className="header__entry" to="/signup" onClick={toggleBtnState}>
+          Регистрация
         </Link>
       );
     } else if (loggedIn) {
       return (
-        <button className="header__entry" onClick={signOut}>
+        <Link className="header__entry" onClick={signOut}>
           Выйти
-        </button>
+        </Link>
       );
     } else {
       return (
-        <Link className="header__entry" to="/signup">
-          Регистрация
+        <Link className="header__entry" to="/signin" onClick={toggleBtnState}>
+          Войти
         </Link>
       );
     }

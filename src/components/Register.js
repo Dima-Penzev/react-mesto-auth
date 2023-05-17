@@ -1,13 +1,15 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import * as auth from "../utils/auth";
+import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 
-export default function Register({ toggleBtnState }) {
+export default function Register({ onRegister, toggleBtnState }) {
   const [formValue, setFormValue] = useState({
     email: "",
     password: "",
   });
-  const navigate = useNavigate();
+
+  useEffect(() => {
+    setFormValue({ email: "", password: "" });
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.currentTarget;
@@ -20,22 +22,15 @@ export default function Register({ toggleBtnState }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    auth
-      .register(formValue.password, formValue.email)
-      .then((res) => {
-        toggleBtnState();
-        setFormValue({ email: "", password: "" });
-        navigate("/signin", { replace: true });
-      })
-      .catch((err) => console.log(err));
+    onRegister(formValue.password, formValue.email);
   };
 
   return (
-    <div>
-      <h2>Регистрация</h2>
-      <form onSubmit={handleSubmit}>
+    <div className="entry">
+      <h2 className="entry__title">Регистрация</h2>
+      <form className="entry__form" onSubmit={handleSubmit}>
         <input
+          className="entry__input"
           type="email"
           name="email"
           placeholder="Email"
@@ -44,6 +39,7 @@ export default function Register({ toggleBtnState }) {
           required
         />
         <input
+          className="entry__input"
           type="password"
           name="password"
           placeholder="Пароль"
@@ -51,10 +47,13 @@ export default function Register({ toggleBtnState }) {
           onChange={handleChange}
           required
         />
-        <button>Зарегистрироваться</button>
+        <button className="entry__submit">Зарегистрироваться</button>
       </form>
-      <p>
-        Уже зарегестрированы? <Link to="/signin">Войти</Link>
+      <p className="entry__text">
+        Уже зарегестрированы?{" "}
+        <Link className="entry__link" to="/signin" onClick={toggleBtnState}>
+          Войти
+        </Link>
       </p>
     </div>
   );

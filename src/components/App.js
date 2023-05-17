@@ -9,6 +9,7 @@ import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
 import ImagePopup from "./ImagePopup";
+import InfoTooltip from "./InfoTooltip";
 import { api } from "../utils/Api";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import Register from "./Register";
@@ -21,6 +22,7 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isConfirmPopupOpen, setIsConfirmPopupOpen] = useState(false);
+  const [isInfoTooltipOpen, setIsInfoTooltip] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({ name: "", about: "" });
   const [cards, setCards] = useState([]);
@@ -68,6 +70,7 @@ function App() {
     setIsEditAvatarPopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setIsConfirmPopupOpen(false);
+    setIsInfoTooltip(false);
     setSelectedCard({});
   }
 
@@ -158,20 +161,31 @@ function App() {
       });
   }
 
-  const handleLogin = (userEmail) => {
+  function handleLogin(userEmail) {
     setLoggedIn(true);
     setUserEmail(userEmail);
-  };
+    toggleBtnState();
+  }
 
-  const resetStates = () => {
+  function resetStates() {
     setLoggedIn(false);
     setUserEmail("");
-    setBtnState(false);
-  };
+    toggleBtnState();
+  }
 
-  const toggleBtnState = () => {
-    setBtnState(true);
-  };
+  function toggleBtnState() {
+    setBtnState(!btnState);
+  }
+
+  function handleRegister(password, email) {
+    auth
+      .register(password, email)
+      .then((res) => {
+        toggleBtnState();
+        navigate("/signin", { replace: true });
+      })
+      .catch((err) => console.log(err));
+  }
 
   return (
     <div className="root">
@@ -181,6 +195,7 @@ function App() {
           userEmail={userEmail}
           loggedIn={loggedIn}
           resetStates={resetStates}
+          toggleBtnState={toggleBtnState}
         />
         <Routes>
           <Route
@@ -195,7 +210,12 @@ function App() {
           />
           <Route
             path="/signup"
-            element={<Register toggleBtnState={toggleBtnState} />}
+            element={
+              <Register
+                onRegister={handleRegister}
+                toggleBtnState={toggleBtnState}
+              />
+            }
           />
           <Route path="/signin" element={<Login handleLogin={handleLogin} />} />
           <Route
@@ -244,6 +264,11 @@ function App() {
           onSubmit={handleConfirmDelete}
         />
         <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+        <InfoTooltip
+          name="info"
+          isOpen={isInfoTooltipOpen}
+          onClose={closeAllPopups}
+        />
       </CurrentUserContext.Provider>
     </div>
   );
