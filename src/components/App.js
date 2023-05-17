@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import successImg from "../images/img-success.png";
+import errorImg from "../images/img-error.png";
 import "../index.css";
 import Header from "./Header";
 import Main from "./Main";
@@ -22,7 +24,7 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isConfirmPopupOpen, setIsConfirmPopupOpen] = useState(false);
-  const [isInfoTooltipOpen, setIsInfoTooltip] = useState(false);
+  const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({ name: "", about: "" });
   const [cards, setCards] = useState([]);
@@ -31,6 +33,7 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState("");
   const [btnState, setBtnState] = useState(false);
+  const [responseData, setResponseData] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -70,7 +73,7 @@ function App() {
     setIsEditAvatarPopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setIsConfirmPopupOpen(false);
-    setIsInfoTooltip(false);
+    setIsInfoTooltipOpen(false);
     setSelectedCard({});
   }
 
@@ -183,8 +186,20 @@ function App() {
       .then((res) => {
         toggleBtnState();
         navigate("/signin", { replace: true });
+        setIsInfoTooltipOpen(true);
+        setResponseData({
+          image: successImg,
+          massege: "Вы успешно зарегистрировались!",
+        });
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        setIsInfoTooltipOpen(true);
+        setResponseData({
+          image: errorImg,
+          massege: "Что-то пошло не так! Попробуйте ещё раз.",
+        });
+      });
   }
 
   return (
@@ -235,7 +250,6 @@ function App() {
             }
           />
         </Routes>
-
         <Footer />
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
@@ -268,6 +282,7 @@ function App() {
           name="info"
           isOpen={isInfoTooltipOpen}
           onClose={closeAllPopups}
+          response={responseData}
         />
       </CurrentUserContext.Provider>
     </div>
