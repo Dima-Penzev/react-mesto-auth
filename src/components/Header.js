@@ -2,14 +2,8 @@ import headerLogo from "../images/header-logo.svg";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 
-function Header({
-  btnState,
-  userEmail,
-  loggedIn,
-  resetStates,
-  toggleBtnState,
-}) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+function Header({ userEmail, loggedIn, resetStates }) {
+  const [isMenuOpened, setIsMenuOpened] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -17,51 +11,15 @@ function Header({
     localStorage.removeItem("token");
     navigate("/signin", { replace: true });
     resetStates();
+    toggleBtnMenu();
   }
 
-  // function renderBtn() {
-  //   if (btnState) {
-  //     return (
-  //       <Link className="header__entry" to="/signup" onClick={toggleBtnState}>
-  //         Регистрация
-  //       </Link>
-  //     );
-  //   } else if (loggedIn) {
-  //     return (
-  //       <button
-  //         className={`header__menu ${isMenuOpen ? "header__menu_close" : ""}`}
-  //         type="button"
-  //         aria-label="меню"
-  //         onClick={toggleBtnMenu}
-  //       />
-  //     );
-  //   } else {
-  //     return (
-  //       <Link className="header__entry" to="/signin" onClick={toggleBtnState}>
-  //         Войти
-  //       </Link>
-  //     );
-  //   }
-  // }
-
   function toggleBtnMenu() {
-    setIsMenuOpen(!isMenuOpen);
+    setIsMenuOpened(!isMenuOpened);
   }
 
   return (
     <header className="header root__content">
-      {loggedIn && (
-        <nav
-          className={`header__navigation ${
-            isMenuOpen ? "header__navigation_opened" : ""
-          }`}
-        >
-          {loggedIn && <p className="header__user-email">{userEmail}</p>}
-          <Link className="header__entry" onClick={signOut}>
-            Выйти
-          </Link>
-        </nav>
-      )}
       <div className="header__container">
         <button type="button" className="header__link">
           <img
@@ -71,17 +29,38 @@ function Header({
           />
         </button>
         {location.pathname === "/signin" && (
-          <Link className="header__entry" to="/signup">
+          <Link className="header__entry header__entry_small" to="/signup">
             Регистрация
           </Link>
         )}
         {location.pathname === "/signup" && (
-          <Link className="header__entry" to="/signin">
+          <Link className="header__entry header__entry_small" to="/signin">
             Войти
           </Link>
         )}
-        {/* {renderBtn()} */}
+        {location.pathname === "/main" && (
+          <button
+            className={`header__menu ${
+              isMenuOpened ? "header__menu_close" : ""
+            }`}
+            type="button"
+            aria-label="меню"
+            onClick={toggleBtnMenu}
+          />
+        )}
       </div>
+      {loggedIn && (
+        <nav
+          className={`header__navigation ${
+            isMenuOpened ? "header__navigation_opened" : ""
+          }`}
+        >
+          <p className="header__user-email">{userEmail}</p>
+          <Link className="header__entry" onClick={signOut}>
+            Выйти
+          </Link>
+        </nav>
+      )}
     </header>
   );
 }

@@ -1,13 +1,10 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import * as auth from "../utils/auth";
 
-export default function Login({ handleLogin }) {
+export default function Login({ onLogin }) {
   const [formValue, setFormValue] = useState({
     email: "",
     password: "",
   });
-  const navigate = useNavigate();
 
   useEffect(() => {
     setFormValue({ email: "", password: "" });
@@ -24,15 +21,7 @@ export default function Login({ handleLogin }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    auth
-      .login(formValue.password, formValue.email)
-      .then((res) => {
-        handleLogin(formValue.email);
-        localStorage.setItem("token", res.token);
-        navigate("/main", { replace: true });
-      })
-      .catch((err) => console.log(err));
+    onLogin(formValue.password, formValue.email);
   };
 
   return (

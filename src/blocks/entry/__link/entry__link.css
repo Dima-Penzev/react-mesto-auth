@@ -7,4 +7,9 @@
   text-align: center;
   color: #ffffff;
   text-decoration: none;
+  transition: opacity 250ms ease-in;
+}
+
+.entry__link:hover {
+  opacity: 0.6;
 }

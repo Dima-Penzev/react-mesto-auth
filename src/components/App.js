@@ -32,7 +32,6 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState("");
-  const [btnState, setBtnState] = useState(false);
   const [responseData, setResponseData] = useState({});
   const navigate = useNavigate();
 
@@ -164,27 +163,27 @@ function App() {
       });
   }
 
-  function handleLogin(userEmail) {
-    setLoggedIn(true);
-    setUserEmail(userEmail);
-    toggleBtnState();
+  function handleLogin(userPassword, userEmail) {
+    auth
+      .login(userPassword, userEmail)
+      .then((res) => {
+        setLoggedIn(true);
+        setUserEmail(userEmail);
+        localStorage.setItem("token", res.token);
+        navigate("/main", { replace: true });
+      })
+      .catch((err) => console.log(err));
   }
 
   function resetStates() {
     setLoggedIn(false);
     setUserEmail("");
-    toggleBtnState();
-  }
-
-  function toggleBtnState() {
-    setBtnState(!btnState);
   }
 
   function handleRegister(password, email) {
     auth
       .register(password, email)
-      .then((res) => {
-        toggleBtnState();
+      .then(() => {
         navigate("/signin", { replace: true });
         setIsInfoTooltipOpen(true);
         setResponseData({
@@ -206,11 +205,9 @@ function App() {
     <div className="root">
       <CurrentUserContext.Provider value={currentUser}>
         <Header
-          btnState={btnState}
           userEmail={userEmail}
           loggedIn={loggedIn}
           resetStates={resetStates}
-          toggleBtnState={toggleBtnState}
         />
         <Routes>
           <Route
@@ -225,14 +222,9 @@ function App() {
           />
           <Route
             path="/signup"
-            element={
-              <Register
-                onRegister={handleRegister}
-                toggleBtnState={toggleBtnState}
-              />
-            }
+            element={<Register onRegister={handleRegister} />}
           />
-          <Route path="/signin" element={<Login handleLogin={handleLogin} />} />
+          <Route path="/signin" element={<Login onLogin={handleLogin} />} />
           <Route
             path="/main"
             element={

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 
-export default function Register({ onRegister, toggleBtnState }) {
+export default function Register({ onRegister }) {
   const [formValue, setFormValue] = useState({
     email: "",
     password: "",
@@ -51,7 +51,7 @@ export default function Register({ onRegister, toggleBtnState }) {
       </form>
       <p className="entry__text">
         Уже зарегестрированы?{" "}
-        <Link className="entry__link" to="/signin" onClick={toggleBtnState}>
+        <Link className="entry__link" to="/signin">
           Войти
         </Link>
       </p>
